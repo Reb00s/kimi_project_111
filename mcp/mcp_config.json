@@ -1,0 +1,24 @@
+{
+  "mcpServers": {
+    "example-files": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "./workspace"
+      ],
+      "read_only": true,
+      "note": "Пример: доступ к файлам проекта. Замени на свои серверы."
+    },
+    "example-api": {
+      "url": "${MCP_SERVER_1_URL}",
+      "headers": {
+        "Authorization": "Bearer ${MCP_SERVER_1_TOKEN}"
+      },
+      "scopes": [
+        "read"
+      ],
+      "note": "Пример внешнего источника через HTTP"
+    }
+  }
+}
