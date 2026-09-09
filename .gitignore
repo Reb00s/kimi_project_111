@@ -3,3 +3,4 @@ workspace/scratch/
 workspace/runs/*/logs/
 __pycache__/
 *.log
+stand/.env.stand
