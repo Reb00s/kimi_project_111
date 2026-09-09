@@ -1,0 +1,38 @@
+# Стенд LLM: Ollama (backend) + Open WebUI (веб-интерфейс).
+# Запуск: docker compose --env-file ../.env.stand up -d
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: stand-ollama
+    restart: unless-stopped
+    ports:
+      - "${OLLAMA_PORT:-11434}:11434"
+    volumes:
+      - ollama_models:/root/.ollama
+    environment:
+      - OLLAMA_KEEP_ALIVE=30m
+      - OLLAMA_MAX_LOADED_MODELS=2
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: stand-webui
+    restart: unless-stopped
+    ports:
+      - "${WEBUI_PORT:-3000}:8080"
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+    volumes:
+      - webui_data:/app/backend/data
+    depends_on:
+      - ollama
+
+volumes:
+  ollama_models:
+  webui_data:

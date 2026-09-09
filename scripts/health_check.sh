@@ -3,10 +3,12 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 FAIL=0
 
-# 1. .env заполнен
+# 1. .env заполнен (обязательные переменные)
 if [ ! -f .env ]; then echo "FAIL: нет .env"; FAIL=1;
-elif grep -q '=\s*$' .env; then echo "FAIL: в .env есть пустые значения"; FAIL=1;
+elif ! grep -q '^LLM_MODEL=.\+' .env; then echo "FAIL: в .env не задан LLM_MODEL"; FAIL=1;
 else echo "OK: .env"; fi
+# Опциональные: API-ключ и MCP-источники (примеры в mcp_config.json)
+[ -f .env ] && grep -q '^LLM_API_KEY=.\+' .env || echo "WARN: LLM_API_KEY пуст (нужен только для внешнего API)"
 
 # 2. Структура папок
 for d in config mcp workspace tasks memory; do

@@ -23,3 +23,13 @@
 - Следующий шаг: этап 0 — установить nvidia-container-toolkit и поднять compose-проект стенда.
 - Артефакты: tasks/current.md, memory/decisions.md, workspace/runs/2026-09-09_llm_stand_plan/output/hardware_scan.txt
 ---
+
+---
+## [2026-09-09] Задача: Этапы 0–1 LLM-стенда (окружение, GPU-стек)
+- Цель: выполнить этапы 0–1 плана (окружение + Ollama/Open WebUI + eval).
+- Сделано: `.env` создан (health_check ослаблен: обязателен только LLM_MODEL); compose-проект `stand/` поднят; qwen2.5:7b на 100% GPU; 5/5 eval-промптов пройдено, ~66 ток/с; WebUI отдаёт HTTP 200 на 0.0.0.0:3000 и по LAN 192.168.1.111:3000.
+- Остановились на: этап 2 — нужна проверка с внешних устройств пользователя + firewall (sudo недоступен без пароля: `sudo ufw allow 3000,11434/tcp`).
+- Ключевые решения: порты 3000 (WebUI) и 11434 (Ollama API) открыты на всех интерфейсах, т.к. стенд только для LAN; sudo-действия (firewall) — за пользователем.
+- Следующий шаг: пользователь проверяет http://192.168.1.111:3000 с телефона/ноутбука; затем этап 3 (модельный зоопарк).
+- Артефакты: stand/docker-compose.yml, stand/.env.example, workspace/runs/2026-09-09_llm_stand_plan/output/eval_results.md
+---
