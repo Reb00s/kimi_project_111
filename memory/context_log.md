@@ -13,3 +13,13 @@
 ---
 
 Правило: заметка должна позволить возобновить работу за <2 минуты чтения.
+
+---
+## [2026-09-09] Задача: План реализации LLM-стенда
+- Цель: составить поэтапный план и запланировать выполнение (primary_task.md).
+- Сделано: просканировано железо; план из 8 этапов записан в tasks/current.md; создан запуск workspace/runs/2026-09-09_llm_stand_plan/; решения — в memory/decisions.md.
+- Остановились на: план зафиксирован, следующий шаг — этап 0 (окружение: .env, nvidia-container-toolkit, compose-проект).
+- Ключевые решения: Ollama+Open WebUI (простота сопровождения); ComfyUI/AudioCraft отдельными сервисами; апгрейд RAM — отдельный этап 6.
+- Следующий шаг: этап 0 — установить nvidia-container-toolkit и поднять compose-проект стенда.
+- Артефакты: tasks/current.md, memory/decisions.md, workspace/runs/2026-09-09_llm_stand_plan/output/hardware_scan.txt
+---

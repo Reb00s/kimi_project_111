@@ -1,0 +1,27 @@
+=== CPU ===
+Architecture:                            x86_64
+CPU(s):                                  8
+Model name:                              AMD Ryzen 7 5800X 8-Core Processor
+Thread(s) per core:                      1
+Core(s) per socket:                      8
+
+=== RAM ===
+               total        used        free      shared  buff/cache   available
+Mem:            23Gi       1.3Gi        20Gi       1.4Mi       1.4Gi        22Gi
+Swap:          8.0Gi          0B       8.0Gi
+
+=== DISK ===
+Filesystem                         Size  Used Avail Use% Mounted on
+/dev/mapper/ubuntu--vg-ubuntu--lv  194G   14G  172G   8% /
+
+=== GPU ===
+name, memory.total [MiB], driver_version
+NVIDIA GeForce RTX 3060, 12288 MiB, 595.84
+
+=== OS ===
+PRETTY_NAME="Ubuntu 24.04.4 LTS"
+NAME="Ubuntu"
+6.8.0-139-generic
+=== Docker ===
+Docker version 29.4.3, build 055a478
+Docker Compose version v5.1.3
