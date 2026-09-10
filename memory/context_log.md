@@ -103,3 +103,13 @@
 - Следующий шаг: при желании — повесить инструмент на модель по умолчанию в UI; продолжить по плану (ComfyUI / апгрейд RAM).
 - Артефакты: stand/tts_worker/{app.py,Dockerfile}, stand/docker-compose.yml, stand/.env.example, инструмент в БД WebUI (id 96c3ca16-df01-415d-8e27-774579b27bd9)
 ---
+
+---
+## [2026-09-10] Задача: Этапы 5–6 закрыты (ComfyUI + 72B)
+- Цель: проверить 72B после ребута ВМ (62 ГБ RAM) и развернуть генерацию изображений.
+- Сделано: этап 6 ✅ — 72B грузится гибридом, но 0.8 ток/с при любом num_gpu (бутылочное горлышко — CPU-слои/DDR4) → только фоновые задачи. Этап 5 ✅ — ComfyUI (obeliks/comfyui, порт 8188), RealVisXL V5.0 fp16, тест 30 сек/1024², качество подтверждено (output/comfy_test_image.png). Нюанс образа: models_dir=/app/models (отдельный volume comfyui_models), модели докидываются docker cp (в контейнере нет curl).
+- Остановились на: этапы 5–6 закрыты; остался этап 7 (сопровождение: update/backup, health_check, README).
+- Ключевые решения: 72B — фоновый режим; FLUX не влезает в 12 ГБ VRAM (RealVisXL вместо); интеграцию генерации картинок в чат WebUI отложили (нужен workflow-шаблон).
+- Следующий шаг: этап 7 — сопровождение.
+- Артефакты: stand/docker-compose.yml (+comfyui, 2 volume), output/comfy_test_image.png
+---

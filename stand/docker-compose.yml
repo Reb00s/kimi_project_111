@@ -67,9 +67,28 @@ services:
     depends_on:
       - speech
 
+  comfyui:
+    image: obeliks/comfyui:latest-cu126
+    container_name: stand-comfyui
+    restart: unless-stopped
+    ports:
+      - "${COMFY_PORT:-8188}:8188"
+    volumes:
+      - comfyui_data:/app/user
+      - comfyui_models:/app/models
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
 volumes:
   ollama_models:
   webui_data:
   speech_voices:
   speech_config:
   tts_files:
+  comfyui_data:
+  comfyui_models:
