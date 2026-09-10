@@ -54,8 +54,22 @@ services:
               count: all
               capabilities: [gpu]
 
+  tts-worker:
+    build: ./tts_worker
+    container_name: stand-tts-worker
+    restart: unless-stopped
+    ports:
+      - "${TTS_PORT:-8001}:8000"
+    volumes:
+      - tts_files:/data/files
+    environment:
+      - LAN_BASE_URL=http://192.168.1.111:8001
+    depends_on:
+      - speech
+
 volumes:
   ollama_models:
   webui_data:
   speech_voices:
   speech_config:
+  tts_files:

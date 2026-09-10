@@ -83,3 +83,23 @@
 - Следующий шаг: по команде пользователя — resume оркестратора озвучки или следующая задача (через grill-me).
 - Артефакты: AGENTS.md, memory/decisions.md
 ---
+
+---
+## [2026-09-10] Задача: Оркестратор озвучки — ПАУЗА (квота)
+- Цель: озвучка книг через чат LLM (tts-worker + tools Open WebUI), см. бриф ниже.
+- Сделано: спецификация согласована; черновик stand/tts_worker/Dockerfile; субагент agent-0 остановлен по 5-часовому лимиту квоты.
+- Остановились на: resume agent-0 (prompt "continue") после сброса квоты. Бриф: (1) сервис stand/tts_worker (FastAPI: POST /jobs {text,voice} → job_id; GET /jobs/{id} статус/прогресс; GET /files/{id}.mp3 раздача; нарезка ~1200 симв. как в scripts/tts_txt2mp3.py; синтез через http://speech:8000/v1/audio/speech модель tts-1-hd; склейка ffmpeg concat; cleanup 24ч). (2) compose: tts-worker, порт ${TTS_PORT:-8001}:8000, volume tts_files, env LAN_BASE_URL=http://192.168.1.111:8001, depends_on speech; +TTS_PORT в stand/.env.example. (3) Инструмент Open WebUI в sqlite (таблица tool, user_id админа): tts_start(text)→job_id, tts_status(job_id)→ссылка/прогресс. (4) Тесты: worker на 2000 симв. (mp3 >50КБ, ffprobe >30с); chat/completions с tool_ids на qwen2.5:7b (для токена временно сменить bcrypt-hash админа и восстановить). НЕ коммитить.
+- Ключевые решения: фоновые джобы (книги идут часами, sync-вызов нельзя); файлы раздаёт сам worker; LLM — дирижёр через 2 инструмента.
+- Следующий шаг: resume agent-0 после сброса квоты.
+- Артефакты: stand/tts_worker/Dockerfile (черновик)
+---
+
+---
+## [2026-09-10] Задача: Оркестратор озвучки — ГОТОВО (tts-worker + tools WebUI)
+- Цель: пользователь в чате просит озвучить текст → LLM вызывает инструменты → mp3 по ссылке из LAN.
+- Сделано: stand/tts_worker/ (app.py FastAPI + Dockerfile) — POST /jobs → job_id, фоновый поток (нарезка 1200 симв., синтез http://speech:8000 tts-1-hd, ffmpeg concat), GET /jobs/{id} (status/progress/url), GET /files/{id}.mp3, cleanup 24ч; compose-сервис tts-worker (порт 8001, volume tts_files, LAN_BASE_URL=http://192.168.1.111:8001); TTS_PORT=8001 в .env.example; инструмент «tts-конвертер» в sqlite WebUI (id 96c3ca16-df01-415d-8e27-774579b27bd9, методы tts_start/tts_status, ВАЖНО: specs JSON-списком иначе ToolModel падает с 500). Тесты: 1932 симв. → done за 50с, mp3 1,08 МБ / 135,6с; end-to-end через чат: tts_start → задача 0bc2a6fa done; tts_status → модель вернула ссылку http://192.168.1.111:8001/files/... (скачивание 200 OK).
+- Остановились на: всё готово и проверено; пароль админа восстановлен (временный bcrypt отклоняется).
+- Ключевые решения: хеш пароля админа — в таблице auth (не user); инструменты исполняются сервером только при наличии chat_id+id(message_id) в запросе (без них — сырой tool_calls клиенту); passlib в контейнере нет — bcrypt напрямую; ollama qwen2.5:7b держит native tool calling.
+- Следующий шаг: при желании — повесить инструмент на модель по умолчанию в UI; продолжить по плану (ComfyUI / апгрейд RAM).
+- Артефакты: stand/tts_worker/{app.py,Dockerfile}, stand/docker-compose.yml, stand/.env.example, инструмент в БД WebUI (id 96c3ca16-df01-415d-8e27-774579b27bd9)
+---
