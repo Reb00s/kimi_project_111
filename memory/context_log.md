@@ -53,3 +53,13 @@
 - Следующий шаг: тест TTS (/v1/audio/speech с русским текстом) + включение озвучки в WebUI; пользователь — ребут ВМ под 64 ГБ.
 - Артефакты: stand/docker-compose.yml (+speech), .kimi-code/skills/, memory/decisions.md
 ---
+
+---
+## [2026-09-10] Задача: TTS-озвучка работает (этап 4 закрыт)
+- Цель: развернуть TTS (приоритет №1 после grill-me) и интегрировать в Open WebUI.
+- Сделано: qwen2.5:72b (47 ГБ) скачан; openedai-speech поднят (stand-speech, порт 8000, GPU); русский TTS протестирован (output/tts_test_ru.mp3), ~4x realtime на прогретой модели; WebUI настроен (sqlite: audio.tts.engine=openai → http://speech:8000/v1, tts-1-hd, голос alloy); диск 58% занят (78 ГБ свободно).
+- Остановились на: этапы 3.5 и 4 закрыты; следующий — этап 5 (ComfyUI) либо этап 6 (после ребута ВМ на 64 ГБ, действие пользователя).
+- Ключевые решения: openedai-speech модель «tts-1-hd» = XTTS v2 (медленный первый запуск ~3 мин из-за загрузки модели); «tts-1» = piper (без русских голосов — не использовать); конфиг WebUI правим напрямую в sqlite (таблица config, ключи audio.tts.*).
+- Следующий шаг: этап 5 (ComfyUI) или ребут ВМ → проверка 72B (этап 6).
+- Артефакты: stand/docker-compose.yml (сервис speech), workspace/runs/2026-09-09_llm_stand_plan/output/tts_test_ru.mp3
+---
