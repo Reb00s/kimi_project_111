@@ -28,11 +28,34 @@ services:
       - "${WEBUI_PORT:-3000}:8080"
     environment:
       - OLLAMA_BASE_URL=http://ollama:11434
+      # Мульти-юзер (этап 3.5): регистрация открыта, но новые ждут одобрения админа
+      - WEBUI_AUTH=true
+      - ENABLE_SIGNUP=true
+      - DEFAULT_USER_ROLE=pending
     volumes:
       - webui_data:/app/backend/data
     depends_on:
       - ollama
 
+  speech:
+    image: ghcr.io/matatonic/openedai-speech:latest
+    container_name: stand-speech
+    restart: unless-stopped
+    ports:
+      - "${SPEECH_PORT:-8000}:8000"
+    volumes:
+      - speech_voices:/app/voices
+      - speech_config:/app/config
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
 volumes:
   ollama_models:
   webui_data:
+  speech_voices:
+  speech_config:

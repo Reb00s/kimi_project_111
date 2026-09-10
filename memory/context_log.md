@@ -43,3 +43,13 @@
 - Следующий шаг: этап 4 — ComfyUI в Docker, базовый workflow SDXL/FLUX по VRAM.
 - Артефакты: workspace/runs/2026-09-09_llm_stand_plan/output/model_zoo.md
 ---
+
+---
+## [2026-09-10] Задача: Grill-me → корректировка плана + мульти-юзер + старт TTS
+- Цель: скилл grill-me использован для уточнения плана; зафиксированы решения пользователя, начата перестройка.
+- Сделано: план в tasks/current.md перестроен (TTS=приоритет №1, музыка→backlog, RAM 64 ГБ); добавлены скиллы grill-me/grilling в .kimi-code/skills; мульти-юзер настроен (админ уже был: d.karamba@gmail.com; signup открыт, новые = pending; чаты разделены); pull qwen2.5:72b (~47 ГБ) запущен в фоне; добавлен сервис openedai-speech в compose (качается).
+- Остановились на: ожидаем pull openedai-speech; затем тест русского TTS и интеграция в Open WebUI (Audio → TTS через config sqlite).
+- Ключевые решения: TTS через openedai-speech (XTTS v2, русский); конфиг WebUI правится в sqlite (env перекрыты БД); 72B качаем заранее — RAM 64 ГБ будет после ребута ВМ (пользователь перенастроит гипервизор).
+- Следующий шаг: тест TTS (/v1/audio/speech с русским текстом) + включение озвучки в WebUI; пользователь — ребут ВМ под 64 ГБ.
+- Артефакты: stand/docker-compose.yml (+speech), .kimi-code/skills/, memory/decisions.md
+---
