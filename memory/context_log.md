@@ -133,3 +133,13 @@
 - Следующий шаг: пользователь запускает /grill-me (или говорит «продолжай») → этап 0: установка k3s + GPU device plugin.
 - Артефакты: tasks/current.md, tasks/archive/2026-09-11_llm_stand_done.md, workspace/scratch/env.stand.bak, stand/ (манифесты compose — как референс для переноса в поды)
 ---
+
+---
+## [2026-09-11] Задача: Одноузловой Kubernetes (k3s) — этапы 0–1
+- Цель: превратить очищенный сервер в k8s-площадку с GPU, без вопросов пользователю (автономный режим).
+- Сделано: swap отключён (fstab.bak сохранён); k3s v1.36.4 stable, узел iamodels Ready; kubeconfig 644 + ~/.kube/config; helm v3.22.0, k9s v0.51.0; GPU: RuntimeClass nvidia + NVIDIA device plugin (патч runtimeClassName), узел рекламирует nvidia.com/gpu: 1, nvidia-smi в поде пройден; манифесты в k8s/ (README, runtimeclass.yaml, gpu-test-pod.yaml).
+- Остановились на: этапе 2 — перенос LLM-стенда (ollama, webui, speech, tts-worker, comfyui) в поды; модели через PV/hostPath.
+- Ключевые решения: k3s (не microk8s/kubeadm); k3s САМ добавляет nvidia-рантайм в containerd — config.toml.tmpl не нужен (дубль уронил containerd: "table nvidia already exists"); GPU-подам обязателен runtimeClassName: nvidia; Docker оставлен для сборки образов.
+- Следующий шаг: по команде «продолжай» — этап 2: манифесты подов стенда + PVC под модели.
+- Артефакты: k8s/ (README.md, runtimeclass.yaml, gpu-test-pod.yaml), tasks/current.md, memory/decisions.md
+---
