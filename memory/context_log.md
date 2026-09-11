@@ -123,3 +123,13 @@
 - Следующий шаг: по команде пользователя реализовать план этапа 7 (см. план в задаче/диалоге).
 - Артефакты: stand/docker-compose.yml, stand/comfyui_workflows/ (realvisxl + animagine), scripts/ (tts_txt2mp3.py, health_check.sh), memory/decisions.md
 ---
+
+---
+## [2026-09-11] Задача: Очистка сервера под Kubernetes
+- Цель: превратить сервер в одноузловой k8s; сначала полная очистка от LLM-стенда (выбран вариант очистки, не переустановки через Proxmox).
+- Сделано: стенд остановлен (compose down -v), docker prune -a --volumes, safetensors из /tmp удалены; диск 153→14 ГБ занято (171 ГБ свободно); `.env.stand` сохранён в workspace/scratch/env.stand.bak; анализ: RAM 62 ГБ и GPU (драйвер 595.84 + nvidia-container-toolkit) достаточно; docker engine оставлен для сборки образов; задача LLM-стенда уархивирована (tasks/archive/2026-09-11_llm_stand_done.md), текущая — k8s.
+- Остановились на: ожидании grill-me/решений по дистрибутиву (рекомендация k3s), swap (отключить), ingress, способу сборки образов; вопросы записаны в tasks/current.md.
+- Ключевые решения: чистим существующую ОС вместо переустановки (по выбору пользователя); один SSD 200 ГБ достаточно для старта, при нехватке — расширить LVM в Proxmox; LLM-стенд позже переносим в k8s как поды.
+- Следующий шаг: пользователь запускает /grill-me (или говорит «продолжай») → этап 0: установка k3s + GPU device plugin.
+- Артефакты: tasks/current.md, tasks/archive/2026-09-11_llm_stand_done.md, workspace/scratch/env.stand.bak, stand/ (манифесты compose — как референс для переноса в поды)
+---
